@@ -1,1 +1,69 @@
-node_modules/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependency directories
+node_modules
+# Optional: You may exclude `dist` and `build` folders depending on your bundling setup
+dist
+dist-ssr
+build
+
+# Local development files
+*.local
+.env          # Ignore environment variable files
+.env.*        # Ignore all variations of .env files (e.g., .env.development)
+.env.local
+
+# Temporary directories or files
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/
+!.vscode/extensions.json    # Include VSCode extensions config
+.idea/
+.DS_Store                   # macOS Finder metadata
+*.suo                       # Visual Studio
+*.ntvs*                     # Node.js projects created in Visual Studio
+*.njsproj                   # Node.js projects
+*.sln                       # Visual Studio solution files
+*.sw?                       # Swap files created by editors like Vim
+
+# Coverage directory used by testing frameworks
+coverage/
+
+# Build directories used by Docker, CI/CD pipelines, or other tools
+docker-compose.override.yml
+Dockerfile*
+.dockerignore
+
+# Build artifacts and generated code
+public/
+static/
+out/
+
+# Debugger working directory
+.vscode/
+debug/
+
+# Package lock files (optional)
+# You might want to keep this tracked if you're sharing the project with a team
+# Uncomment to ignore if you don't need lock files
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Others (Optional)
+.nyc_output/                 # Code coverage reports for Istanbul/NYC
+.sass-cache/                 # Cache for Sass
+.pnpm-store/                 # pnpm package manager store
+coverage/
+.idea/                       # JetBrains IDEs
+.cache/
+.history/

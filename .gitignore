@@ -9,7 +9,7 @@ lerna-debug.log*
 
 # Dependency directories
 node_modules
-# Optional: You may exclude `dist` and `build` folders depending on your bundling setup
+# Optional:
 dist
 dist-ssr
 build
@@ -53,11 +53,6 @@ out/
 debug/
 
 # Package lock files (optional)
-# You might want to keep this tracked if you're sharing the project with a team
-# Uncomment to ignore if you don't need lock files
-# package-lock.json
-# yarn.lock
-# pnpm-lock.yaml
 
 # Others (Optional)
 .nyc_output/                 # Code coverage reports for Istanbul/NYC

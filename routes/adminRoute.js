@@ -1,6 +1,7 @@
 import express from "express";
 import con from "../utils/db.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 const router = express.Router();
 
 router.post("/admin-login", (req, res) => {
@@ -63,6 +64,47 @@ router.get("/category", (req, res) => {
     return res.status(200).send({
       status: true,
       categories: result,
+    });
+  });
+});
+
+//add employee-1.53
+router.post("/add-employee", (req, res) => {
+  console.log('log req',req);
+  const sql =
+    "INSERT INTO employee \
+   (`name`,`email`,`password`,`address`,`salary`,`image`,`category_id`) \
+   VALUES (?)";
+  //  we have to hash the password
+  bcrypt.hash(req.body.password, 10, (error, hash) => {
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        errorMessage: "could not Create Employee haser",
+        error,
+      });
+    }
+    const values = [
+      req.body.name,
+      req.body.email,
+      hash,
+      req.body.address,
+      req.body.salary,
+      req.body.image,
+      req.body.category_id,
+    ];
+    con.query(sql, [values], (error, result) => {
+      if (error) {
+        return res.status(400).json({
+          success: false,
+          errorMessage: "could not Create Employee query",
+          error,
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        errorMessage: "Employee Has been Added Successfully !",
+      });
     });
   });
 });

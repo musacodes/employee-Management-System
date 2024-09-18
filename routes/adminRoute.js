@@ -76,7 +76,7 @@ router.post("/add-employee", (req, res) => {
    (`name`,`email`,`password`,`address`,`salary`,`image`,`category_id`) \
    VALUES (?)";
   //  we have to hash the password
-  bcrypt.hash(req.body.password, 10, (error, hash) => {
+  bcrypt.hash(req.body.password.toString(), 10, (error, hash) => {
     if (error) {
       return res.status(400).json({
         success: false,

@@ -2,6 +2,8 @@ import express from "express";
 import con from "../utils/db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import multer from "multer";
+import path from "path";
 const router = express.Router();
 
 router.post("/admin-login", (req, res) => {
@@ -68,45 +70,128 @@ router.get("/category", (req, res) => {
   });
 });
 
-//add employee-1.53
-router.post("/add-employee", (req, res) => {
-  console.log('log req',req);
-  const sql =
-    "INSERT INTO employee \
-   (`name`,`email`,`password`,`address`,`salary`,`image`,`category_id`) \
-   VALUES (?)";
-  //  we have to hash the password
+// image upload
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "public/images");
+//   },
+//   filename: (req, file, cs) => {
+//     cb(
+//       null,
+//       file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+//     );
+//   },
+// });
+
+// const upload = multer({
+//   storage:storage
+// })
+
+// //add employee-1.53
+// router.post("/add-employee",upload.single('image'), (req, res) => {
+//   console.log("log req", req);
+//   const sql =
+//     "INSERT INTO employee \
+//    (`name`,`email`,`password`,`address`,`salary`,`image`,`category_id`) \
+//    VALUES (?)";
+//   //  we have to hash the password
+//   bcrypt.hash(req.body.password.toString(), 10, (error, hash) => {
+//     if (error) {
+//       return res.status(400).json({
+//         success: false,
+//         errorMessage: "could not Create Employee haser",
+//         error,
+//       });
+//     }
+//     const values = [
+//       req.body.name,
+//       req.body.email,
+//       hash,
+//       req.body.address,
+//       req.body.salary,
+//       req.file.filename,
+//       req.body.category_id,
+//     ];
+//     con.query(sql, [values], (error, result) => {
+//       if (error) {
+//         return res.status(400).json({
+//           success: false,
+//           errorMessage: "could not Create Employee query",
+//           error,
+//         });
+//       }
+//       return res.status(200).json({
+//         success: true,
+//         errorMessage: "Employee Has been Added Successfully !",
+//       });
+//     });
+//   });
+// });
+
+// Configure Multer for file storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/images"); // Directory for storing uploaded images
+  },
+  filename: (req, file, cb) => {
+    // Create a unique filename for each uploaded file
+    cb(
+      null,
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// Add employee route
+router.post("/add-employee", upload.single('image'), (req, res) => {
+  console.log("Received request:", req.body);
+
+  // SQL query for inserting employee data into the database
+  const sql = `
+    INSERT INTO employee
+    (name, email, password, address, salary, image, category_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  // Hash the password before storing it in the database
   bcrypt.hash(req.body.password.toString(), 10, (error, hash) => {
     if (error) {
-      return res.status(400).json({
+      return res.status(500).json({
         success: false,
-        errorMessage: "could not Create Employee haser",
+        errorMessage: "Could not hash the password",
         error,
       });
     }
+
+    // Create an array of values to insert
     const values = [
       req.body.name,
       req.body.email,
-      hash,
+      hash, // Use the hashed password
       req.body.address,
       req.body.salary,
-      req.body.image,
+      req.file ? req.file.filename : null, // Handle image filename, or null if no image
       req.body.category_id,
     ];
-    con.query(sql, [values], (error, result) => {
+
+    // Execute the SQL query
+    con.query(sql, values, (error, result) => {
       if (error) {
         return res.status(400).json({
           success: false,
-          errorMessage: "could not Create Employee query",
+          errorMessage: "Could not create employee",
           error,
         });
       }
       return res.status(200).json({
         success: true,
-        errorMessage: "Employee Has been Added Successfully !",
+        message: "Employee has been added successfully!",
       });
     });
   });
 });
+
 
 export { router as adminRouter };

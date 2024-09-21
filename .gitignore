@@ -44,7 +44,6 @@ Dockerfile*
 .dockerignore
 
 # Build artifacts and generated code
-public/
 static/
 out/
 

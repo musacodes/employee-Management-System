@@ -145,7 +145,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Add employee route
-router.post("/add-employee", upload.single('image'), (req, res) => {
+router.post("/add-employee", upload.single("image"), (req, res) => {
   console.log("Received request:", req.body);
 
   // SQL query for inserting employee data into the database
@@ -193,5 +193,20 @@ router.post("/add-employee", upload.single('image'), (req, res) => {
   });
 });
 
+router.get("/get-employees", (req, res) => {
+  const sql = `SELECT * FROM employee`;
+  con.query(sql, (error, result) => {
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        errorMessage: "GET ALL Employees Failed",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      employees: result,
+    });
+  });
+});
 
 export { router as adminRouter };

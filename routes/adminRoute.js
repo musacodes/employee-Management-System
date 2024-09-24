@@ -209,4 +209,67 @@ router.get("/get-employees", (req, res) => {
   });
 });
 
+router.get("/employee/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = "SELECT * FROM employee WHERE id = ?";
+  con.query(sql, [id], (error, result) => {
+    if (error) {
+      return res.status(400).json({
+        status: false,
+        errorMessage: "failed to get emp id",
+      });
+    }
+    return res.status(200).json({
+      status: true,
+      result: result,
+    });
+  });
+});
+
+router.patch("/employee/:id", (req, res) => {
+  const { id } = req.params;
+  const sql =
+    "UPDATE employee SET name = ?, email = ?, salary = ?, address = ?, category_id = ? WHERE id = ?";
+  con.query(
+    sql,
+    [
+      req.body.name,
+      req.body.email,
+      req.body.salary,
+      req.body.address,
+      req.body.category_id,
+      id,
+    ],
+    (error, result) => {
+      if (error) {
+        return res.status(500).json({
+          status: false,
+          errorMessage: "Update employee failed",
+        });
+      }
+      return res.status(200).json({
+        status: true,
+        result: `Successfully Updated, ${result}`,
+      });
+    }
+  );
+});
+
+router.delete('/delete-employee/:id',(req,res)=>{
+  const {id} = req.params;
+  const sql = `DELETE from employee WHERE id = ?`;
+  con.query(sql,[id],(error,result)=>{
+    if(error){
+      return res.status(400).json({
+        success:false,
+        errorMessage:'Error at DEL emp'
+      })
+    }
+    return res.status(200).json({
+      success:true,
+      errorMessage:'Completed Successfull'
+    })
+  })
+})
+
 export { router as adminRouter };

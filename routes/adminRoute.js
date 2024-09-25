@@ -272,4 +272,75 @@ router.delete('/delete-employee/:id',(req,res)=>{
   })
 })
 
+router.get('/admin-count',(req,res)=>{
+  const sql = 'SELECT count(id) as admin from admin';
+  con.query(sql,(error,result)=>{
+    if(error){
+      return res.status.json({
+        success:false,
+        errorMessage:'admin get failed'
+      })
+    }
+    return res.status(200).json({
+      success:true,
+      result:result
+    })
+  })
+
+})
+
+router.get('/employee-count',(req,res)=>{
+  const sql = 'SELECT count(id) as employee from employee';
+  con.query(sql,(error,result)=>{
+    if(error){
+      return res.status.json({
+        success:false,
+        errorMessage:'employee get failed'
+      })
+    }
+    return res.status(200).json({
+      success:true,
+      result:result
+    })
+  })
+})
+
+router.get('/salary-total',(req,res)=>{
+  // SQL Agggregate Function 
+  const sql = 'SELECT sum(salary) as salary from employee';
+  con.query(sql,(error,result)=>{
+    if(error){
+      return res.status.json({
+        success:false,
+        errorMessage:'salary get failed'
+      })
+    }
+    return res.status(200).json({
+      success:true,
+      result:result
+    })
+  })
+})
+
+router.get('/admin-records', (req, res) => {
+  
+  const sql = 'SELECT * FROM admin';
+  
+  con.query(sql, (error, result) => {
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        errorMessage: 'Failed to retrieve admin records',
+        error: error.message
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      result: result
+    });
+  });
+});
+
+
 export { router as adminRouter };

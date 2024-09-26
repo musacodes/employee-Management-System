@@ -255,92 +255,94 @@ router.patch("/employee/:id", (req, res) => {
   );
 });
 
-router.delete('/delete-employee/:id',(req,res)=>{
-  const {id} = req.params;
+router.delete("/delete-employee/:id", (req, res) => {
+  const { id } = req.params;
   const sql = `DELETE from employee WHERE id = ?`;
-  con.query(sql,[id],(error,result)=>{
-    if(error){
+  con.query(sql, [id], (error, result) => {
+    if (error) {
       return res.status(400).json({
-        success:false,
-        errorMessage:'Error at DEL emp'
-      })
+        success: false,
+        errorMessage: "Error at DEL emp",
+      });
     }
     return res.status(200).json({
-      success:true,
-      errorMessage:'Completed Successfull'
-    })
-  })
-})
+      success: true,
+      errorMessage: "Completed Successfull",
+    });
+  });
+});
 
-router.get('/admin-count',(req,res)=>{
-  const sql = 'SELECT count(id) as admin from admin';
-  con.query(sql,(error,result)=>{
-    if(error){
+router.get("/admin-count", (req, res) => {
+  const sql = "SELECT count(id) as admin from admin";
+  con.query(sql, (error, result) => {
+    if (error) {
       return res.status.json({
-        success:false,
-        errorMessage:'admin get failed'
-      })
+        success: false,
+        errorMessage: "admin get failed",
+      });
     }
     return res.status(200).json({
-      success:true,
-      result:result
-    })
-  })
+      success: true,
+      result: result,
+    });
+  });
+});
 
-})
-
-router.get('/employee-count',(req,res)=>{
-  const sql = 'SELECT count(id) as employee from employee';
-  con.query(sql,(error,result)=>{
-    if(error){
+router.get("/employee-count", (req, res) => {
+  const sql = "SELECT count(id) as employee from employee";
+  con.query(sql, (error, result) => {
+    if (error) {
       return res.status.json({
-        success:false,
-        errorMessage:'employee get failed'
-      })
+        success: false,
+        errorMessage: "employee get failed",
+      });
     }
     return res.status(200).json({
-      success:true,
-      result:result
-    })
-  })
-})
+      success: true,
+      result: result,
+    });
+  });
+});
 
-router.get('/salary-total',(req,res)=>{
-  // SQL Agggregate Function 
-  const sql = 'SELECT sum(salary) as salary from employee';
-  con.query(sql,(error,result)=>{
-    if(error){
+router.get("/salary-total", (req, res) => {
+  // SQL Agggregate Function
+  const sql = "SELECT sum(salary) as salary from employee";
+  con.query(sql, (error, result) => {
+    if (error) {
       return res.status.json({
-        success:false,
-        errorMessage:'salary get failed'
-      })
+        success: false,
+        errorMessage: "salary get failed",
+      });
     }
     return res.status(200).json({
-      success:true,
-      result:result
-    })
-  })
-})
+      success: true,
+      result: result,
+    });
+  });
+});
 
-router.get('/admin-records', (req, res) => {
-  
-  const sql = 'SELECT * FROM admin';
-  
+router.get("/admin-records", (req, res) => {
+  const sql = "SELECT * FROM admin";
+
   con.query(sql, (error, result) => {
     if (error) {
       return res.status(400).json({
         success: false,
-        errorMessage: 'Failed to retrieve admin records',
-        error: error.message
+        errorMessage: "Failed to retrieve admin records",
+        error: error.message,
       });
     }
 
     return res.status(200).json({
       success: true,
-      result: result
+      result: result,
     });
   });
 });
 
+router.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  return res.status(200).json({ success: true });
+});
 
 export { router as adminRouter };

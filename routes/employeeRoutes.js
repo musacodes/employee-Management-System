@@ -1,25 +1,41 @@
-import express from 'express';
+import express from "express";
+import con from "../utils/db.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import multer from "multer";
+import path from "path";
 
 const router = express.Router();
 
-router.get('/employee-login',(req,res)=>{
-    const sql = `SELECT * FROM employee WHERE email = ? and password = ?`;
-    con.query(sql,[req.body.email,req.body.password],(error,result)=>{
-        if(error){
-            return res.status(500).send({
-                success:false,
-                errorMessage:'could not login emp'
-            })
+router.get("/employee-login", (req, res) => {
+  const sql = `SELECT * FROM employee WHERE email = ?`;
+  con.query(sql, [req.body.email], (error, result) => {
+    if (error) {
+      return res.status(500).send({
+        loginStatus: false,
+        errorMessage: "could not login emp",
+      });
+    }
+    if (result.length > 0) {
+      const email = result[0].email;
+      const token = jwt.sign(
+        { role: "admin", email: email },
+        "jwt_secret_key",
+        {
+          expiresIn: "7d",
         }
-            if (result.length>0) {
-                console.log('result is',result)                
-            } else {
-                return res.status(400).send({
-                    success:false,
-                    errorMessage:'could not login emp'
-                })
-            }
-    })
-})
+      );
+      res.cookie("token", token);
+      return res.status(200).json({
+        loginStatus: true,
+      });
+    } else {
+      return res.status(400).send({
+        success: false,
+        errorMessage: "could not login emp",
+      });
+    }
+  });
+});
 
-export {router as employeeRouter};
+export { router as employeeRouter };

@@ -17,18 +17,31 @@ router.get("/employee-login", (req, res) => {
       });
     }
     if (result.length > 0) {
-      const email = result[0].email;
-      const token = jwt.sign(
-        { role: "admin", email: email },
-        "jwt_secret_key",
-        {
-          expiresIn: "7d",
+      bcrypt.compare(
+        req.body.password,
+        result[0].password,
+        (error, respone) => {
+          if (error) {
+            return res.status(400).json({
+              loginStatus: false,
+            });
+          }
+          if (respone) {
+            const email = result[0].email;
+            const token = jwt.sign(
+              { role: "employee", email: email },
+              "employee_secret_key",
+              {
+                expiresIn: "7d",
+              }
+            );
+            res.cookie("token", token);
+            return res.status(200).json({
+              loginStatus: true,
+            });
+          }
         }
       );
-      res.cookie("token", token);
-      return res.status(200).json({
-        loginStatus: true,
-      });
     } else {
       return res.status(400).send({
         success: false,

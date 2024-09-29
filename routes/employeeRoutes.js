@@ -7,7 +7,9 @@ import path from "path";
 
 const router = express.Router();
 
-router.get("/employee-login", (req, res) => {
+router.post("/employee-login", (req, res) => {
+  console.log("emails", req.body.email, req.body.password);
+
   const sql = `SELECT * FROM employee WHERE email = ?`;
   con.query(sql, [req.body.email], (error, result) => {
     if (error) {
@@ -38,6 +40,7 @@ router.get("/employee-login", (req, res) => {
             res.cookie("token", token);
             return res.status(200).json({
               loginStatus: true,
+              id: result[0].id,
             });
           }
         }
@@ -51,4 +54,19 @@ router.get("/employee-login", (req, res) => {
   });
 });
 
+router.get("/detail/:id",(req,res)=>{
+  const id = req.params.id;
+  const sql = "SELECT * FROM employee WHERE id = ?";
+  con.query(sql,[id],(error,result)=>{
+    if(error){
+      return res.status(400).json({
+        success:false
+      })
+    }
+    return res.status(200).json({
+      success:true,
+      result: result
+    })
+  })
+})
 export { router as employeeRouter };
